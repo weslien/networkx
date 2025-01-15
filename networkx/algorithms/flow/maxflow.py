@@ -1,6 +1,7 @@
 """
 Maximum flow (and minimum cut) algorithms on capacitated graphs.
 """
+
 import networkx as nx
 
 from .boykovkolmogorov import boykov_kolmogorov
@@ -462,8 +463,7 @@ def minimum_cut(flowG, _s, _t, capacity="capacity", flow_func=None, **kwargs):
     partition = (set(flowG) - non_reachable, non_reachable)
     # Finally add again cutset edges to the residual network to make
     # sure that it is reusable.
-    if cutset is not None:
-        R.add_edges_from(cutset)
+    R.add_edges_from(cutset)
     return (R.graph["flow_value"], partition)
 
 
