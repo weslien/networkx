@@ -212,6 +212,8 @@ class TestGenericPath:
         assert sorted(ans[4]) == [[4]]
 
     def test_all_pairs_shortest_path(self):
+        # shortest_path w/o source and target returns a generator instead of
+        # a dict beginning in version 3.5. Only the first call needed changed here.
         p = dict(nx.shortest_path(self.cycle))
         assert p[0][3] == [0, 1, 2, 3]
         assert p == dict(nx.all_pairs_shortest_path(self.cycle))

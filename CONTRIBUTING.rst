@@ -7,6 +7,8 @@ Contributor Guide
    This document assumes some familiarity with contributing to open source
    scientific Python projects using GitHub pull requests. If this does not
    describe you, you may first want to see the :ref:`contributing_faq`.
+   If you are using a LLM or any other AI model, you will still need to
+   follow the process described here.
 
 .. _dev_workflow:
 
@@ -78,8 +80,8 @@ Development Workflow
          # Test your installation
          pytest --pyargs networkx
 
-   * Finally, we recommend you use a pre-commit hook, which runs black when
-     you type ``git commit``::
+   * Finally, we recommend you install pre-commit which checks
+     that your code matches formatting guidelines::
 
        pre-commit install
 
@@ -307,7 +309,18 @@ Guidelines
       def function_only_for_Graph(G, others):
           # function not for directed graphs *or* for multigraphs
           pass
+* Functions should avoid returning numpy scalars (e.g., `numpy.int64`, `numpy.float64`)
+  to ensure better compatibility and avoid issues with parts of the codebase that may 
+  not recognize or handle numpy scalars properly. If a function returns a numpy scalar,
+  it should be converted to a native Python type.
 
+  .. code-block:: python
+
+      def convert_to_python_type():
+          # Perform some computation resulting in a numpy scalar
+          a = np.int64(42)  
+          # Convert to a Python scalar before returning
+          return a.item()
 
 Testing
 -------
@@ -371,6 +384,15 @@ We will help you create the tests and sort out any kind of problem during code r
 Image comparison
 ~~~~~~~~~~~~~~~~
 
+.. note::
+   Image comparison tests require the ``pytest-mpl`` extension, which can be
+   installed with::
+
+      pip install pytest-mpl
+
+   If ``pytest-mpl`` is not installed, the test suite may emit warnings related
+   to ``pytest.mark.mpl_image_compare`` - these can be safely ignored.
+
 To run image comparisons::
 
     $ PYTHONPATH=. pytest --mpl --pyargs networkx.drawing
@@ -430,7 +452,7 @@ General guidelines for making a good gallery plot:
 * Examples should highlight a single feature/command.
 * Try to make the example as simple as possible.
 * Data needed by examples should be included in the same directory and the example script.
-* Add comments to explain things are aren't obvious from reading the code.
+* Add comments to explain things that aren't obvious from reading the code.
 * Describe the feature that you're showcasing and link to other relevant parts of the
   documentation.
 

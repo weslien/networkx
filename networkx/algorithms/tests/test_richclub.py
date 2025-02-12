@@ -21,7 +21,7 @@ def test_richclub_seed():
 
 def test_richclub_normalized():
     G = nx.Graph([(0, 1), (0, 2), (1, 2), (1, 3), (1, 4), (4, 5)])
-    rcNorm = nx.richclub.rich_club_coefficient(G, Q=2)
+    rcNorm = nx.richclub.rich_club_coefficient(G, Q=2, seed=42)
     assert rcNorm == {0: 1.0, 1: 1.0}
 
 
@@ -86,7 +86,7 @@ def test_rich_club_selfloop():
     G.add_edge(1, 2)
     with pytest.raises(
         Exception,
-        match="rich_club_coefficient is not implemented for " "graphs with self loops.",
+        match="rich_club_coefficient is not implemented for graphs with self loops.",
     ):
         nx.rich_club_coefficient(G)
 
